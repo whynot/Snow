@@ -1,0 +1,87 @@
+<html>
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<title></title>
+		
+		<style type="text/css" media="screen">
+			body {
+				color: #262626;
+				background-color: #fafafa;
+				font-size: 18px;
+				font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+				font-weight: 300;
+			}
+			div {
+				margin: 20px;
+			}
+			h1 {
+				font-weight:  300;
+				font-size: 30px;
+			}
+			a {
+				color: #003569;
+				text-decoration: none;
+				font-weight: bold;
+			}
+			#igProfile {
+				overflow: auto;
+			}
+			#igProfile img {
+				float: left;
+				margin-right: 20px;
+				border-radius:  50%;
+			}
+			#igFeed {
+				list-style: none;
+		  }
+			#igFeed li {
+				float: left;
+				width: 300px;
+				height: 300px;
+				margin: 10px
+			}
+			#igFeed li img {
+				max-width: 100%;
+				max-height: 100%;
+			}
+		</style>
+		
+		<script type="text/javascript">
+			var api_token = '1022009504.c2b0bde.13a5c24fca8946cd825f7d7b6e455fc2',
+					userid = 'self',
+					photos = 18;
+						
+			window.igProfile = function(response){
+				container = document.title = response.data.full_name + ' (@' + response.data.username + ') • Instagram photos and videos';
+				container = document.getElementById('igProfile');
+				container.innerHTML = '<img class="profile" src="' + response.data.profile_picture + '">';
+				container.innerHTML += '<div><h1>' + response.data.username + '</h1>';
+				container.innerHTML += '<p>' + response.data.counts.media + ' posts ' + response.data.counts.followed_by + ' followers ' + response.data.counts.follows + ' following</p>';
+				container.innerHTML += '<p><strong>' + response.data.full_name + '</strong> ' + response.data.bio + '</p></div>';
+			}
+			window.igFeed = function(response){
+				container = document.getElementById('igFeed');
+				for(i in response.data){
+					container.innerHTML += '<li><img src="' + response.data[i].images.low_resolution.url + '" /></li>';
+				}
+			}
+			
+			document.addEventListener("DOMContentLoaded", function(event){ 
+				var script = document.createElement('script');
+				script.src = 'https://api.instagram.com/v1/users/' + userid + '?access_token=' + api_token +'&callback=igProfile';
+				document.body.appendChild(script);
+				
+				var script2 = document.createElement('script');
+				script2.src = 'https://api.instagram.com/v1/users/' + userid + '/media/recent?access_token=' + api_token +'&count=' + photos + '&callback=igFeed';
+				document.body.appendChild(script2);
+			});
+		</script>		
+	</head>
+
+	<body>
+		<div id="igProfile">
+		</div>
+		<ul id="igFeed">
+		</ul>
+	</body>
+</html>
